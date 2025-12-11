@@ -1,0 +1,45 @@
+version: '3.8'
+
+services:
+  # Database
+  db:
+    image: postgres:15-alpine
+    container_name: hibryda_db
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: hibryda_db
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  # Backend API
+  backend:
+    build: 
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: hibryda_api
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: "postgresql://user:password@db:5432/hibryda_db?schema=public"
+      JWT_SECRET: "your_secure_secret"
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    command: sh -c "npx prisma push && npm start"
+
+  # Frontend (Vite)
+  frontend:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: hibryda_web
+    ports:
+      - "3000:80"
+    depends_on:
+      - backend
+
+volumes:
+  postgres_data:

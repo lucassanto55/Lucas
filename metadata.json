@@ -1,0 +1,7 @@
+{
+  "name": "HibrydaRoute",
+  "description": "Sistema de Otimização de Rotas para Hibryda Pescados. Planejamento logístico, otimização TSP e gestão de entregas.",
+  "requestFramePermissions": [
+    "geolocation"
+  ]
+}
